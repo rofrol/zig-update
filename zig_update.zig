@@ -1,4 +1,6 @@
-// zig build-exe -Doptimize=ReleaseFast zig_update.zig
+// Date: 2023/06/22
+// Zig version: 0.11.0-dev.3737+9eb008717
+// Build: zig build-exe -Doptimize=ReleaseFast zig_update.zig
 
 const builtin = @import("builtin");
 const std = @import("std");
