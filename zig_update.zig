@@ -2,6 +2,12 @@
 // Zig version: 0.11.0-dev.3737+9eb008717
 // Build: zig build-exe -Doptimize=ReleaseFast zig_update.zig
 
+// 必要なソフト
+// Windows: curl, 7za
+// Linux: curl, 7z
+
+// Windows上でしかテストしていません
+
 const builtin = @import("builtin");
 const std = @import("std");
 const ChildProcess = std.ChildProcess;
