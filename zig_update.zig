@@ -48,7 +48,6 @@ pub fn main() !void {
 
     // index.jsonをパースしてURLを取得
     var parsed = try json.parseFromSlice(json.Value, arena, file, .{});
-    defer parsed.deinit();
     const url =
         parsed.value.object.get("master").?.object.get(os_tag).?.object.get("tarball").?.string;
 
