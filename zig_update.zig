@@ -4,7 +4,11 @@
 
 // 必要なソフト
 // Windows: curl, 7za
-// Linux: curl, 7z
+// その他(Linuxなど): curl, 7z
+
+// zigディレクトリの位置
+// Windows: c:\zig
+// その他(Linuxなど): ~/bin/zig
 
 // Windows上でしかテストしていません
 
