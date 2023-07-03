@@ -48,7 +48,7 @@ pub fn main() !void {
     const url =
         parsed.value.object.get("master").?.object.get(arch_os).?.object.get("tarball").?.string;
 
-    std.debug.print("url: {s}\n", .{url});
+    print("url: {s}\n", .{url});
 
     // download file (.zip or .tar.xz)
     const curl_zig = [_][]const u8{ "curl", "-OL", url };
@@ -57,7 +57,7 @@ pub fn main() !void {
     // get file name from url
     var iter = mem.splitBackwardsScalar(u8, url, '/');
     const filename = iter.next().?;
-    std.debug.print("filename: {s}\n", .{filename});
+    print("filename: {s}\n", .{filename});
 
     // unarchive the file
     // https://techcommunity.microsoft.com/t5/containers/tar-and-curl-come-to-windows/ba-p/382409
