@@ -1,12 +1,11 @@
 // required software
-// Windows: curl, tar
-// others (Linux, etc.): curl, tar
+// Windows, Linux, macOS etc.: curl, tar
 
 // location of zig directory
 // Windows: c:\zig
 // others (Linux, etc.): ~/bin/zig
 
-// only tested on Windows
+// only tested on Windows and macOS
 
 const builtin = @import("builtin");
 const std = @import("std");
