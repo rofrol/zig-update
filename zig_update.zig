@@ -19,6 +19,7 @@ const print = std.debug.print;
 const process = std.process;
 
 const home_env = if (builtin.os.tag == .windows) "USERPROFILE" else "HOME";
+const ext = if (builtin.os.tag == .windows) ".zip" else ".tar.xz";
 
 pub fn main() !void {
     std.debug.print("builtin.os.tag: {any}, @tagName(builtin.cpu.arch): {s}\n", .{ builtin.os.tag, @tagName(builtin.cpu.arch) });
@@ -65,7 +66,8 @@ pub fn main() !void {
     print("{s}\n", .{ret.stdout});
 
     // Remove extension (.zip or .tar.xz) from file name
-    const filename_without_ext = fs.path.stem(fs.path.stem(filename));
+    var iter_fn = std.mem.splitSequence(u8, filename, ext);
+    const filename_without_ext = iter_fn.next().?;
 
     // determine the destination path
     const new_path = if (builtin.os.tag == .windows) blk: {
