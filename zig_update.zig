@@ -46,8 +46,6 @@ pub fn main() !void {
     const url =
         parsed.value.object.get("master").?.object.get(os_tag).?.object.get("tarball").?.string;
 
-    std.debug.print("{s}\n", .{url});
-
     // download file (.zip or .tar.xz)
     const curl_zig = [_][]const u8{ "curl", "-OL", url };
     _ = try ChildProcess.exec(.{ .allocator = arena, .argv = &curl_zig });
@@ -55,14 +53,11 @@ pub fn main() !void {
     // get file name from url
     var iter = mem.splitBackwardsScalar(u8, url, '/');
     const filename = iter.next().?;
-    std.debug.print("{s}\n", .{filename});
-
-    const file_path = try fs.path.join(arena, &[_][]const u8{ current_dir_path, filename });
 
     // unarchive the file
     // https://techcommunity.microsoft.com/t5/containers/tar-and-curl-come-to-windows/ba-p/382409
     // https://github.com/libarchive/libarchive/wiki/LibarchiveFormats
-    const extraction = [_][]const u8{ "tar", "xf", file_path };
+    const extraction = [_][]const u8{ "tar", "xf", filename };
     const ret = try ChildProcess.exec(.{ .allocator = arena, .argv = &extraction });
     print("{s}\n", .{ret.stdout});
 
