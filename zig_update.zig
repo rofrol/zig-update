@@ -53,8 +53,8 @@ pub fn main() !void {
     _ = try ChildProcess.exec(.{ .allocator = arena, .argv = &curl_zig });
 
     // get file name from url
-    var iter = mem.splitBackwardsScalar(u8, url, '/');
-    const filename = iter.next().?;
+    const uri = try std.Uri.parse(url);
+    const filename = fs.path.basename(uri.path);
     print("filename: {s}\n", .{filename});
 
     // unarchive the file
