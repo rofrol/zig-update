@@ -1,6 +1,9 @@
 // required software
 // Windows, Linux, macOS etc.: curl, tar
 
+// https://techcommunity.microsoft.com/t5/containers/tar-and-curl-come-to-windows/ba-p/382409
+// https://github.com/libarchive/libarchive/wiki/LibarchiveFormats
+
 // location of zig directory
 // Windows: c:\zig
 // others (Linux, etc.): ~/bin/zig
@@ -53,8 +56,6 @@ pub fn main() !void {
     print("filename: {s}\n", .{filename});
 
     // unarchive the file
-    // https://techcommunity.microsoft.com/t5/containers/tar-and-curl-come-to-windows/ba-p/382409
-    // https://github.com/libarchive/libarchive/wiki/LibarchiveFormats
     const extraction = [_][]const u8{ "tar", "xf", filename };
     const ret = try ChildProcess.exec(.{ .allocator = arena, .argv = &extraction });
     print("{s}\n", .{ret.stdout});
