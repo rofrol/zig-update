@@ -22,7 +22,6 @@ const home_env = if (builtin.os.tag == .windows) "USERPROFILE" else "HOME";
 const ext = if (builtin.os.tag == .windows) ".zip" else ".tar.xz";
 
 pub fn main() !void {
-    std.debug.print("builtin.os.tag: {any}, @tagName(builtin.cpu.arch): {s}\n", .{ builtin.os.tag, @tagName(builtin.cpu.arch) });
     var arena_instance = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena_instance.deinit();
     const arena = arena_instance.allocator();
