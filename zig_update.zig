@@ -69,12 +69,7 @@ pub fn main() !void {
     const filename_without_ext = iter_fn.next().?;
 
     // determine the destination path
-    const new_path = if (builtin.os.tag == .windows) blk: {
-        break :blk "C:\\zig";
-    } else blk: {
-        const path = try fs.path.join(arena, &[_][]const u8{ home, "bin", "zig" });
-        break :blk path;
-    };
+    const new_path = if (builtin.os.tag == .windows) "C:\\zig" else try fs.path.join(arena, &[_][]const u8{ home, "bin", "zig" });
 
     // delete zig directory if it already exists
     try fs.cwd().deleteTree(new_path);
