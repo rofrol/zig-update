@@ -11,12 +11,7 @@ const builtin = @import("builtin");
 const std = @import("std");
 const ChildProcess = std.ChildProcess;
 const fs = std.fs;
-const json = std.json;
-const math = std.math;
-const mem = std.mem;
-const os = std.os;
 const print = std.debug.print;
-const process = std.process;
 
 const home_env = if (builtin.os.tag == .windows) "USERPROFILE" else "HOME";
 const ext = if (builtin.os.tag == .windows) ".zip" else ".tar.xz";
@@ -27,9 +22,9 @@ pub fn main() !void {
     const arena = arena_instance.allocator();
 
     // Change directory to ~/Downloads
-    const home = try process.getEnvVarOwned(arena, home_env);
+    const home = try std.process.getEnvVarOwned(arena, home_env);
     const current_dir_path = try fs.path.join(arena, &[_][]const u8{ home, "Downloads" });
-    try os.chdir(current_dir_path);
+    try std.os.chdir(current_dir_path);
 
     // Download index.json
     const curl_json = [_][]const u8{ "curl", "-OL", "https://ziglang.org/download/index.json" };
@@ -37,12 +32,12 @@ pub fn main() !void {
 
     // load index.json
     const json_path = try fs.path.join(arena, &[_][]const u8{ current_dir_path, "index.json" });
-    const file = try fs.cwd().readFileAlloc(arena, json_path, math.maxInt(usize));
+    const file = try fs.cwd().readFileAlloc(arena, json_path, std.math.maxInt(usize));
 
     const arch_os = try std.fmt.allocPrint(arena, "{s}-{s}", .{ @tagName(builtin.cpu.arch), @tagName(builtin.os.tag) });
 
     // parse index.json to get URL
-    var parsed = try json.parseFromSlice(json.Value, arena, file, .{});
+    var parsed = try std.json.parseFromSlice(std.json.Value, arena, file, .{});
     const url =
         parsed.value.object.get("master").?.object.get(arch_os).?.object.get("tarball").?.string;
 
@@ -65,7 +60,7 @@ pub fn main() !void {
     print("{s}\n", .{ret.stdout});
 
     // Remove extension (.zip or .tar.xz) from file name
-    var iter_fn = mem.splitSequence(u8, filename, ext);
+    var iter_fn = std.mem.splitSequence(u8, filename, ext);
     const filename_without_ext = iter_fn.next().?;
 
     // determine the destination path
@@ -75,5 +70,5 @@ pub fn main() !void {
     try fs.cwd().deleteTree(new_path);
 
     // move zig directory
-    try os.rename(filename_without_ext, new_path);
+    try std.os.rename(filename_without_ext, new_path);
 }
