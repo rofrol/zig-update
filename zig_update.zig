@@ -66,7 +66,7 @@ pub fn main() !void {
     print("{s}\n", .{ret.stdout});
 
     // Remove extension (.zip or .tar.xz) from file name
-    var iter_fn = std.mem.splitSequence(u8, filename, ext);
+    var iter_fn = mem.splitSequence(u8, filename, ext);
     const filename_without_ext = iter_fn.next().?;
 
     // determine the destination path
