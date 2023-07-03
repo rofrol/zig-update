@@ -20,10 +20,10 @@ const print = std.debug.print;
 const process = std.process;
 
 const home_env = if (builtin.os.tag == .windows) "USERPROFILE" else "HOME";
-const os_tag = if (builtin.os.tag == .windows) "x86_64-windows" else "x86_64-linux";
 const ext = if (builtin.os.tag == .windows) ".zip" else ".tar.xz";
 
 pub fn main() !void {
+    std.debug.print("builtin.os.tag: {any}, @tagName(builtin.cpu.arch): {s}\n", .{ builtin.os.tag, @tagName(builtin.cpu.arch) });
     var arena_instance = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena_instance.deinit();
     const arena = arena_instance.allocator();
@@ -41,10 +41,14 @@ pub fn main() !void {
     const json_path = try fs.path.join(arena, &[_][]const u8{ current_dir_path, "index.json" });
     const file = try fs.cwd().readFileAlloc(arena, json_path, math.maxInt(usize));
 
+    const arch_os = try std.fmt.allocPrint(arena, "{s}-{s}", .{ @tagName(builtin.cpu.arch), @tagName(builtin.os.tag) });
+
     // parse index.json to get URL
     var parsed = try json.parseFromSlice(json.Value, arena, file, .{});
     const url =
-        parsed.value.object.get("master").?.object.get(os_tag).?.object.get("tarball").?.string;
+        parsed.value.object.get("master").?.object.get(arch_os).?.object.get("tarball").?.string;
+
+    std.debug.print("url: {s}\n", .{url});
 
     // download file (.zip or .tar.xz)
     const curl_zig = [_][]const u8{ "curl", "-OL", url };
@@ -53,6 +57,7 @@ pub fn main() !void {
     // get file name from url
     var iter = mem.splitBackwardsScalar(u8, url, '/');
     const filename = iter.next().?;
+    std.debug.print("filename: {s}\n", .{filename});
 
     // unarchive the file
     // https://techcommunity.microsoft.com/t5/containers/tar-and-curl-come-to-windows/ba-p/382409
