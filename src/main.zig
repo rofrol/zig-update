@@ -37,12 +37,12 @@ pub fn main() !void {
     const json_path = try fs.path.join(arena, &[_][]const u8{ current_dir_path, "index.json" });
     const file = try fs.cwd().readFileAlloc(arena, json_path, std.math.maxInt(usize));
 
-    const arch_os = try std.fmt.allocPrint(arena, "{s}-{s}", .{ @tagName(builtin.cpu.arch), @tagName(builtin.os.tag) });
+    const json_platform = @tagName(builtin.cpu.arch) ++ "-" ++ @tagName(builtin.os.tag);
 
     // parse index.json to get URL
     var parsed = try std.json.parseFromSlice(std.json.Value, arena, file, .{});
     const url =
-        parsed.value.object.get("master").?.object.get(arch_os).?.object.get("tarball").?.string;
+        parsed.value.object.get("master").?.object.get(json_platform).?.object.get("tarball").?.string;
 
     print("url: {s}\n", .{url});
 
